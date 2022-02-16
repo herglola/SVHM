@@ -3,7 +3,7 @@ Implements a support vector machine algorithm for cencored data to predict event
 
 Here is an example for the dataset bmt from the R package KMsurv
 
-´´´{r}
+´´´sh
 library(KMsurv)
 library(SVHM)
 
