@@ -11,7 +11,7 @@ library(SVHM)
 # Parameters #
 ##############
 
-ggamma_squared <- 1
+gamma_squared <- 1
 k <- 3
 cross_validation_val <- 4
 test_size=.25
