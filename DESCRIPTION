@@ -1,0 +1,11 @@
+Package: SVHM
+Type: Package
+Title: Support-Vector-Hazard-Machine
+Version: 0.1.0
+Author: Luca Herglotz
+Maintainer: Luca Herglotz <st163109@stud.uni-stuttgart.de>
+Description: Implements the Support-Vector-Hazard machine approach presented in the paper 'Support Vector Hazards Machine: A Counting Process Framework for Learning Risk Scores for Censored Outcomes' by  Wang, Yuanjia and Chen, Tianle and Zeng, Donglin. To solve the quadratic optimization problem for SVHM either the package osqp or the package Rmosek has to be installed.
+Imports: Matrix, Rmosek, osqp, distances, matchingR, dplyr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2

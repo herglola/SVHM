@@ -1,0 +1,34 @@
+library(osqp)
+
+#' Optimal solution of SVHM
+#'
+#' Uses the osqp package to solve the quadratic optimization problem defined by SVHM.
+#'
+#'
+#' @param optimization_data all values needed for optimization in a list with order (risk_vector, adapted_kernel_matrix, cond_mat, weight_vec)
+#' @param num_event_times number of event times in the training dataset
+#' @param cost cost parameter of the support vector machine of type numeric
+#'
+#' @return optimal solution for the SVHM
+#'
+#'
+#' @import osqp
+#'
+
+
+
+opt_sol_osqp <- function(optimizazion_data, num_event_times, cost) {
+  risk_vec <- optimizazion_data[[1]]
+  adap_kernel_mat <- optimizazion_data[[2]]
+  cond_mat <- optimizazion_data[[3]]
+  weight_vec <- optimizazion_data[[4]]
+
+  lower_bound <- rep(0, num_event_times + length(risk_vec))
+  upper_bound <- c(cost*weight_vec, rep(0, num_event_times))
+
+
+  # Formulierung des Optimierungsproblems
+  model <- osqp(P=adap_kernel_mat, q=-risk_vec, A=cond_mat, l=lower_bound, u=upper_bound, pars=osqpSettings())
+  res_osqp <- model$Solve()
+  return(res_osqp$x)
+}
