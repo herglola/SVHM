@@ -3,13 +3,9 @@ Implements a support vector machine algorithm for cencored data to predict event
 
 Here is an example for the dataset bmt from the R package KMsurv
 
-\begin{verbatim}
+´´´{r}
 library(KMsurv)
 library(SVHM)
-
-##############
-# Parameters #
-##############
 
 gamma_squared <- .005
 k <- 3
@@ -28,7 +24,7 @@ data(bmt)
 dataset
 
 model <- SVHM:::create_svhm(dataset, covariates, cross_validation_val, cost_grid, gamma_squared, k, test_size, varName_cencored="d3", varName_futime = "t2", opt='mosek')
-\end{verbatim}
+´´´
 
 ## References
 <a id="1">[1]</a> 
