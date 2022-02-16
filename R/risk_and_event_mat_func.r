@@ -1,4 +1,4 @@
-#' Risk and Event Matrix
+#' @title Risk and Event Matrix
 #'
 #' calculates two matrices of length n*m, if n are the number of subjects and m the number of event times.
 #' The Risk Matrix indicates for every subject in a dataset if the subject is still at risk at every event time.

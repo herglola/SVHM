@@ -3,5 +3,6 @@
 import(Matrix)
 import(Rmosek)
 import(distances)
+import(dplyr)
 import(matchingR)
 import(osqp)

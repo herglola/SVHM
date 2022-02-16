@@ -1,7 +1,35 @@
 
 library(dplyr)
+#' Train SVHM
+#'
+#' predicts the event times of a given dataset using cross validation for the cost parameter. Final model includes predicted event times as well as parameters to predict new event times from subject who are not in df.
+#' All values of covariates are first normalized to the intervall [0,1] before the SVHM algorithm is applied. The cost parameter for the final model is chosen with the best pearson correlation.
+#'
+#'
+#' @param df data frame
+#' @param covariates vector of name of covariates
+#' @param cross_validation_val number of subset to use for cost optimization
+#' @param cost_grid grid of all cost parameter to be optoimzed upon
+#' @param gamma_squared width of the kernel
+#' @param varName_cencored name of variable in df that indicates cencoring
+#' @param varName_futime name of variable in df that indicates event time
+#' @param k integer of how many nearest event times are used to predict the event time (default is 3)
+#' @param test_size size of final test set in precent
+#' @param opt which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})
+#'
+#' @return {trained model with
+#'          \code{$e_vec} vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
+#'          \code{$k_mat} kernel matrix,
+#'          \code{$sol} calculated optimal solution,
+#'          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
+#'          \code{$p_corr} pearson correlation of the predicted times
+#' }
+#'
+#'
+#' @import dplyr
+#'
 
-create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_squared, k=3, test_size=.2, varName_cencored="death", varName_futime = "futime", opt='osqp'){
+create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp'){
 
   names(df)[names(df) == varName_cencored] <- "death"
 

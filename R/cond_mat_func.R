@@ -1,5 +1,5 @@
 
-#' Constraint matrix in quadratic optimization problem
+#' @title Constraint matrix in quadratic optimization problem
 #'
 #' calculates the matrix which defines the constraints in the SVHM algorithm
 #'
