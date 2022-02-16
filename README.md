@@ -29,11 +29,11 @@ model <- SVHM:::create_svhm(bmt,
                             covariates, 
                             cross_validation_val, 
                             cost_grid,
-                            gamma_squared, 
-                            k, 
-                            test_size, 
+                            gamma_squared,
                             varName_cencored="d3",
                             varName_futime = "t2", 
+                            k=k, 
+                            test_size=test_size, 
                             opt='osqp')
 ```
 
