@@ -2,7 +2,9 @@
 Implements a support vector machine algorithm for cencored data to predict event times in survival analysis. The algorithm is described in detail in [[1]](#1).
 
 Here is an example for the dataset bmt from the R package KMsurv
-
+   ```sh
+   npm install
+   ```
 ´´´sh
 library(KMsurv)
 library(SVHM)
