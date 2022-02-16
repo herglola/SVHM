@@ -35,10 +35,11 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_s
 
   names(df)[names(df) == varName_futime] <- "futime"
 
-  df[covariates] <- SVHM:::normalize(df, covariates)
   df <- transform(df,
                   death = as.logical(death),
                   id = 1:nrow(df))
+
+  df[covariates] <- SVHM:::normalize(df, covariates)
 
   rows <- sample(nrow(df))
   df <- df[rows, ]
@@ -68,8 +69,6 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_s
     cost <- cost_grid[[j]]
     mean_pearson_corr <- 0
     for (i in 1:cross_validation_val) {
-      cat('####################\n',
-          'RUNNING: ', j, i, '\n')
       training_set <- training_sets[[i]]
       validation_set <- validation_sets[[i]]
 

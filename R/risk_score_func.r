@@ -24,7 +24,7 @@ risk_score_training <- function(gamma_sol, kernel_mat, event_vec, num_event_time
   jsum_vec <- colSums(m)
   for (i in 1:length(risk_training)) {
     # kernel_mat is symmetric
-    risk_training[i] <- sum(jsum_vec*kernel_mat[i,])
+    risk_training[i] <- sum(jsum_vec*kernel_mat[,i])
   }
   return(risk_training)
 }

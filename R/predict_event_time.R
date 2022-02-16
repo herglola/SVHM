@@ -22,8 +22,8 @@
 predict_event_time <- function(df, x, k=3, rounding='ceil') {
   stopifnot(rounding=='ceil' | rounding == 'floor' | rounding == 'no')
   event_times <- sort(df$futime)
-  df1 <- transform(df, dist = abs(df$g-x))
-  df1 <- df1[order(df1$g, decreasing = TRUE),]
+  df1 <- transform(df, dist = abs(df$risk-x))
+  df1 <- df1[order(df1$risk, decreasing = TRUE),]
   df1 <- transform(df1, rank = rank(df1$dist, ties.method = 'first'))
   rank_indices <- which(df1$rank < k+1)
   predicted_time <- sum(event_times[rank_indices])/length(rank_indices)
