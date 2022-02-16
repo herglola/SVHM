@@ -11,11 +11,11 @@ library(SVHM)
 # Parameters #
 ##############
 
-gamma_squared <- .005
-k <- 3
-cross_validation_val <- 4
-test_size=.3
-cost_grid <- 2^c(-12:12)
+gamma_squared <- .05
+k <- 1
+cross_validation_val <- 3
+test_size=.25
+cost_grid <- 2^c(-5:5)
 
 covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7', 'z8', 'z9', 'z10')
 
