@@ -17,7 +17,7 @@ cross_validation_val <- 3
 test_size=.25
 cost_grid <- 2^c(-5:5)
 
-covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7', 'z8', 'z9', 'z10')
+covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7', 'z8')
 
 ######################
 #  Model prediction  #
@@ -34,7 +34,7 @@ model <- SVHM:::create_svhm(bmt,
                             test_size, 
                             varName_cencored="d3",
                             varName_futime = "t2", 
-                            opt='mosek')
+                            opt='osqp')
 ```
 
 ## References
