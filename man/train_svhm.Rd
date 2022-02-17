@@ -31,3 +31,29 @@ train_svhm(train, test, covariates, cost, gamma_squared, k = 3, opt = "osqp")
 \description{
 Uses the Rmosek or osqp package to train the SVHM on a given training and test set.
 }
+\examples{
+{
+
+library(KMsurv)
+library(SVHM)
+
+data(bmt)
+df<-bmt[1:40,]
+
+# shuffles data
+rows <- sample(nrow(df))
+df <- df[rows, ]
+
+covariates <- c('z3', 'z4')
+
+# censoring variable and event variable need to have name "death" and "futime"
+names(df)[names(df) == "d3"] <- "death"
+names(df)[names(df) == "t2"] <- "futime"
+
+n<-floor(nrow(df)/2)
+train<- df[(1:n), ]
+test<- df[-(1:n), ]
+
+train_svhm(train, test, covariates, 10, .5, k=1, opt='osqp')
+}
+}

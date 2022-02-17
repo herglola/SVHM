@@ -16,12 +16,11 @@ library(osqp)
 #'
 
 
-
 opt_sol_osqp <- function(optimizazion_data, num_event_times, cost) {
-  risk_vec <- optimizazion_data[[1]]
-  adap_kernel_mat <- optimizazion_data[[2]]
-  cond_mat <- optimizazion_data[[3]]
-  weight_vec <- optimizazion_data[[4]]
+  risk_vec <- optimizazion_data$r_vec
+  adap_kernel_mat <- optimizazion_data$adap_k_mat
+  cond_mat <- optimizazion_data$c_mat
+  weight_vec <- optimizazion_data$w_vec
 
   lower_bound <- rep(0, num_event_times + length(risk_vec))
   upper_bound <- c(cost*weight_vec, rep(0, num_event_times))

@@ -19,9 +19,9 @@ library(Rmosek)
 
 
 opt_sol_mosek <- function(optimizazion_data, num_event_times, cost) {
-  risk_vec <- optimizazion_data[[1]]
+  risk_vec <- optimizazion_data$r_vec
 
-  adap_kernel_mat <- optimizazion_data[[2]]
+  adap_kernel_mat <- optimizazion_data$adap_k_mat
   stopifnot(isSymmetric(adap_kernel_mat) == TRUE)
   adap_kernel_mat <- as(adap_kernel_mat, "dgTMatrix")
 
@@ -35,8 +35,8 @@ opt_sol_mosek <- function(optimizazion_data, num_event_times, cost) {
   # Mosek erwartet untere Dreiecksmatrix zur Optimierung (Matrix wird als symmetrisch angenommen)
   adap_kernel_mat_as_triplet <- adap_kernel_mat_as_triplet[!(adap_kernel_mat_as_triplet$i<adap_kernel_mat_as_triplet$j),]
 
-  cond_mat <- optimizazion_data[[3]]
-  weight_vec <- optimizazion_data[[4]]
+  cond_mat <- optimizazion_data$c_mat
+  weight_vec <- optimizazion_data$w_vec
 
   prob <- list(sense="max")
   prob

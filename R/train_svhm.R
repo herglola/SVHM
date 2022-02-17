@@ -26,7 +26,31 @@ library(osqp)
 #' @import Rmosek
 #' @import osqp
 #'
-
+#' @examples {
+#'
+#' library(KMsurv)
+#' library(SVHM)
+#'
+#' data(bmt)
+#' df<-bmt[1:40,]
+#'
+#' # shuffles data
+#' rows <- sample(nrow(df))
+#' df <- df[rows, ]
+#'
+#' covariates <- c('z3', 'z4')
+#'
+#' # censoring variable and event variable need to have name "death" and "futime"
+#' names(df)[names(df) == "d3"] <- "death"
+#' names(df)[names(df) == "t2"] <- "futime"
+#'
+#' n<-floor(nrow(df)/2)
+#' train<- df[(1:n), ]
+#' test<- df[-(1:n), ]
+#'
+#' train_svhm(train, test, covariates, 10, .5, k=1, opt='osqp')
+#' }
+#' @export
 train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='osqp'){
   train <- transform(train, training_id = 1:nrow(train))
 
@@ -40,7 +64,7 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
 
   ordered_event_times <- with(train,
                               data.frame(
-                                futtime = sort(train$futime[train$death == TRUE]),
+                                futime = sort(train$futime[train$death == TRUE]),
                                 training_id = train$training_id[train$death == TRUE])
   )
   num_event_times <- nrow(ordered_event_times)
@@ -51,8 +75,8 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
 
   # Erstellt Daten f?r Optimierungsproblem der Form max(gamma^t*risk_vec -1/2* gamma^t*kernel_mat*gamma) mit Nebenbedingungen lower_bound \leq cond_mat*gamma \leq upper_bound
   opt_data <- SVHM:::optimization_data(train_covariates, train, ordered_event_times, gamma_squared)
-  kernel_mat <- opt_data[[5]]
-  event_vec <- opt_data[[6]]
+  kernel_mat <- opt_data$k_mat
+  event_vec <- opt_data$e_vec
 
   if (opt=='osqp'){
     gamma_sol <-  SVHM:::opt_sol_osqp(opt_data, num_event_times, cost)
@@ -62,13 +86,11 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
     stop("Invalid optimization method!")
   }
 
-
   ######################
   # Berechne Riskwerte #
   ######################
   risk_scores_training <-  SVHM:::risk_score_training(gamma_sol, kernel_mat, event_vec, num_event_times, trainig_set_size)
   train <- transform(train, risk = risk_scores_training)
-
 
   test <- transform(test,
                     risk  = sapply( 1:nrow(test), function(x) {

@@ -17,7 +17,7 @@ weight_mat <- function(training_dataset, ordered_event_times) {
                     )
   for(row in 1:nrow(weight_matrix)){
     for (col in 1:ncol(weight_matrix)){
-      if ((training_dataset$futime[row] == ordered_event_times$futtime[col]) & (training_dataset$death[row]==TRUE)){
+      if ((training_dataset$futime[row] == ordered_event_times$futime[col]) & (training_dataset$death[row]==TRUE)){
         weight_matrix[row,col] <- 1-1/(training_dataset$Y[row])
       } else {
         weight_matrix[row,col] <- 1/(training_dataset$Y[row])

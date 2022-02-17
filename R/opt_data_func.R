@@ -11,27 +11,28 @@ library(matchingR)
 #' @param ordered_event_times data frame of all event times ordered in ascending order
 #' @param gamma_squared width of the kernel
 #'
-#' @return {
-#' \item risk_vector            vector representing at which event times the subjects are under risk
-#' \item adapted_kernel_matrix  matrix on which quadratic optimization will be performed
-#' \item cond_mat               matrix representing the constraints of the optimization problem
-#' \item weight_vec             vector of weights at any event time for all subjects
-#' \item kernel_matrix          Gram matrix of covariates
+#' @return {List
+#' \code{$r_vec}            vector representing at which event times the subjects are under risk
+#' \code{$adap_kernel_mat}  matrix on which quadratic optimization will be performed
+#' \code{$c_mat}            matrix representing the constraints of the optimization problem
+#' \code{$w_vec}            vector of weights at any event time for all subjects
+#' \code{$kernel_mat}       Gram matrix of covariates
+#' \code{$e_vec}            vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
 #' }
 #'
 #'
 #' @import Matrix
 #' @import matchingR
 #'
-
+#'
 
 optimization_data <- function(covariates, training_dataset, ordered_event_times, gamma_squared) {
 
   kernel_matrix <- radial_kernel_mat(covariates=covariates, gamma_squared=gamma_squared)
 
   risk_and_event_matrix <- create_risk_and_event_matrix(training_dataset = training_dataset, ordered_event_times = ordered_event_times)
-  risk_vector <- as(t(risk_and_event_matrix[[1]]), 'sparseVector')
-  event_matrix <- risk_and_event_matrix[[2]]
+  risk_vector <- as(t(risk_and_event_matrix$r_mat), 'sparseVector')
+  event_matrix <- risk_and_event_matrix$e_mat
   event_vector <- as(t(event_matrix), 'sparseVector')
 
   rows_in_list <- apply(kernel_matrix, 2, function(x){
@@ -61,5 +62,10 @@ optimization_data <- function(covariates, training_dataset, ordered_event_times,
   cond_mat <- condition_mat(event_vector, nrow(ordered_event_times))
   weight_vec <- as.vector(t(weight_mat(training_dataset, ordered_event_times)))
 
-  return(list(risk_vector, adapted_kernel_matrix, cond_mat, weight_vec, kernel_matrix, event_vector))
+  return(list('r_vec'=risk_vector,
+              'adap_k_mat'=adapted_kernel_matrix,
+              'c_mat'=cond_mat,
+              'w_vec'=weight_vec,
+              'k_mat'=kernel_matrix,
+              'e_vec'=event_vector))
 }

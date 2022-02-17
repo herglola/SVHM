@@ -1,5 +1,6 @@
+library(Matrix)
 
-#' @title Constraint matrix in quadratic optimization problem
+#' Constraint matrix in quadratic optimization problem
 #'
 #' calculates the matrix which defines the constraints in the SVHM algorithm
 #'
@@ -11,8 +12,6 @@
 #'
 #' @import Matrix
 #'
-
-library(Matrix)
 
 condition_mat <- function(event_vec, num_event_time) {
   m <- Matrix(0, nrow = length(event_vec), ncol = num_event_time, sparse=TRUE)

@@ -21,12 +21,13 @@ optimization_data(
 \item{gamma_squared}{width of the kernel}
 }
 \value{
-{
-\item risk_vector            vector representing at which event times the subjects are under risk
-\item adapted_kernel_matrix  matrix on which quadratic optimization will be performed
-\item cond_mat               matrix representing the constraints of the optimization problem
-\item weight_vec             vector of weights at any event time for all subjects
-\item kernel_matrix          Gram matrix of covariates
+{List
+\code{$r_vec}            vector representing at which event times the subjects are under risk
+\code{$adap_kernel_mat}  matrix on which quadratic optimization will be performed
+\code{$c_mat}            matrix representing the constraints of the optimization problem
+\code{$w_vec}            vector of weights at any event time for all subjects
+\code{$kernel_mat}       Gram matrix of covariates
+\code{$e_vec}            vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
 }
 }
 \description{

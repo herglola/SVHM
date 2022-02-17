@@ -28,7 +28,33 @@ library(dplyr)
 #'
 #' @import dplyr
 #'
-
+#' @examples {
+#'
+#' library(KMsurv)
+#' library(SVHM)
+#'
+#' ##############
+#' # Parameters #
+#' ##############
+#'
+#' gamma_squared <- 1
+#' k <- 1
+#' cross_validation_val <- 3
+#' test_size=.3
+#' cost_grid <- 2^c(-12,12)
+#'
+#' covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7')
+#'
+#' ######################
+#' #  Model prediction  #
+#' ######################
+#'
+#' data(bmt)
+#'
+#' model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp')
+#' }
+#'
+#' @export
 create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp'){
 
   names(df)[names(df) == varName_cencored] <- "death"

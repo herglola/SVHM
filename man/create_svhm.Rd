@@ -51,3 +51,31 @@ create_svhm(
 predicts the event times of a given dataset using cross validation for the cost parameter. Final model includes predicted event times as well as parameters to predict new event times from subject who are not in df.
 All values of covariates are first normalized to the intervall [0,1] before the SVHM algorithm is applied. The cost parameter for the final model is chosen with the best pearson correlation.
 }
+\examples{
+{
+
+library(KMsurv)
+library(SVHM)
+
+##############
+# Parameters #
+##############
+
+gamma_squared <- 1
+k <- 1
+cross_validation_val <- 3
+test_size=.3
+cost_grid <- 2^c(-12,12)
+
+covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7')
+
+######################
+#  Model prediction  #
+######################
+
+data(bmt)
+
+model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp')
+}
+
+}
