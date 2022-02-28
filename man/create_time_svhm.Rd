@@ -28,6 +28,10 @@ create_time_svhm(
 
 \item{varName_futime}{name of variable in df that indicates event time}
 
+\item{start_interval}{name of variable that indicates when the interval starts}
+
+\item{end_interval}{name of variable that indicates when the interval ends}
+
 \item{test_size}{size of final test set in precent}
 
 \item{opt}{which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})}

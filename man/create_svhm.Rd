@@ -14,7 +14,8 @@ create_svhm(
   k = 3,
   test_size = 0.2,
   opt = "osqp",
-  gamma_squared = 0.5
+  gamma_squared = 0.5,
+  choose = "c"
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ create_svhm(
 \item{opt}{which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})}
 
 \item{gamma_squared}{width of gaussian kernel}
+
+\item{choose}{optional parameter which decides if the C-index or the pearson correlation is used to determine the optimal cost parameter. Values are either \code{'c'} for the C-Index or \code{'p'} for the pearson correlation}
 }
 \value{
 {trained model with
@@ -45,6 +48,7 @@ create_svhm(
          \code{$sol} calculated optimal solution,
          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
          \code{$p_corr} pearson correlation of the predicted times
+         \code{$C_indes} C-Index
 }
 }
 \description{

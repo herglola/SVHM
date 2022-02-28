@@ -2,7 +2,7 @@
 % Please edit documentation in R/train_time_svhm.R
 \name{train_time_svhm}
 \alias{train_time_svhm}
-\title{Train SVHM}
+\title{Train time dependent SVHM}
 \usage{
 train_time_svhm(
   train,
@@ -27,6 +27,7 @@ train_time_svhm(
 \value{
 {trained model with
          \code{$e_vec} vector indicating if an event happens at each event time
+         \code{$event_times} ordered event times of the training dataset
          \code{$sol} calculated optimal solution for each event time
          \code{$train} train dataset with risk scores
          \code{$test} test dataset with risk scores

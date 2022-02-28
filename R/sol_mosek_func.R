@@ -61,17 +61,19 @@ opt_sol_mosek <- function(optimizazion_data, num_event_times, cost) {
 }
 
 
-#' Optimal solution of SVHM
+#' Optimal solution of time dependent SVHM
 #'
 #' Uses the Rmosek package to solve the quadratic optimization problem defined by SVHM.
 #'
 #'
-#' @param optimization_data all values needed for optimization in a list with order (risk_vector, adapted_kernel_matrix, cond_mat, weight_vec)
-#' @param num_event_times number of event times in the training dataset
+#' @param e_vec vector indicating if a subject experienced an event at an event time
+#' @param k_mat matrix
+#' @param w_vec weight vector
 #' @param cost cost parameter of the support vector machine of type numeric
 #'
-#' @return optimal solution for the SVHM
+#' @return optimal solution for the time dependent SVHM
 #'
+#' @note Rmodek package requires a licence!
 #'
 #' @import Matrix
 #' @import Rmosek

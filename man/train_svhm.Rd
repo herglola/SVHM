@@ -36,6 +36,7 @@ train_svhm(
          \code{$sol} calculated optimal solution,
          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
          \code{$p_corr} pearson correlation of the predicted times
+         \code{$C_indes} C-Index
 }
 }
 \description{

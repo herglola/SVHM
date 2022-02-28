@@ -22,7 +22,7 @@ library(survival)
 #'          \code{$sol} calculated optimal solution,
 #'          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
 #'          \code{$p_corr} pearson correlation of the predicted times
-#'          \code{$C_indes} C-
+#'          \code{$C_indes} C-Index
 #' }
 #'
 #' @note The mosek package requires a license

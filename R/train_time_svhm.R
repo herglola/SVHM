@@ -3,7 +3,7 @@ library(Rmosek)
 library(osqp)
 library(Matrix)
 
-#' Train SVHM
+#' Train time dependent SVHM
 #'
 #' Uses the Rmosek or osqp package to train the time dependent SVHM on a given training and test set. The training calculates the risk scores and
 #' the optimal decision function values for each individual at every event time of the training set.

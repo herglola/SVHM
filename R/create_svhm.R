@@ -24,6 +24,7 @@ library(dplyr)
 #'          \code{$sol} calculated optimal solution,
 #'          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
 #'          \code{$p_corr} pearson correlation of the predicted times
+#'          \code{$C_indes} C-Index
 #' }
 #'
 #' @note The mosek package requires a license
@@ -62,10 +63,10 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
   names(df)[names(df) == varName_cencored] <- "death"
 
   names(df)[names(df) == varName_futime] <- "futime"
-  print(df)
+
   df <- transform(df,
-                  death = as.logical(death),
-                  id = 1:nrow(df))
+                death = as.logical(death),
+                id = 1:nrow(df))
 
   df[covariates] <- SVHM:::normalize(df, covariates)
 

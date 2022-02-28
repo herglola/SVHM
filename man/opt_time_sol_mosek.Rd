@@ -2,20 +2,25 @@
 % Please edit documentation in R/sol_mosek_func.R
 \name{opt_time_sol_mosek}
 \alias{opt_time_sol_mosek}
-\title{Optimal solution of SVHM}
+\title{Optimal solution of time dependent SVHM}
 \usage{
 opt_time_sol_mosek(e_vec, k_mat, w_vec, cost)
 }
 \arguments{
+\item{e_vec}{vector indicating if a subject experienced an event at an event time}
+
+\item{k_mat}{matrix}
+
+\item{w_vec}{weight vector}
+
 \item{cost}{cost parameter of the support vector machine of type numeric}
-
-\item{optimization_data}{all values needed for optimization in a list with order (risk_vector, adapted_kernel_matrix, cond_mat, weight_vec)}
-
-\item{num_event_times}{number of event times in the training dataset}
 }
 \value{
-optimal solution for the SVHM
+optimal solution for the time dependent SVHM
 }
 \description{
 Uses the Rmosek package to solve the quadratic optimization problem defined by SVHM.
+}
+\note{
+Rmodek package requires a licence!
 }
