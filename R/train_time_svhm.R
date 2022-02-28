@@ -20,6 +20,7 @@ library(Matrix)
 #'
 #' @return {trained model with
 #'          \code{$e_vec} vector indicating if an event happens at each event time
+#'          \code{$event_times} ordered event times of the training dataset
 #'          \code{$sol} calculated optimal solution for each event time
 #'          \code{$train} train dataset with risk scores
 #'          \code{$test} test dataset with risk scores
@@ -65,7 +66,6 @@ train_time_svhm <-function(train, test, covariates, cost, opt='osqp', gamma_squa
 
   train_join <- bind_rows(train)
   ordered_event_times <- data.frame('futime' = unique(sort(train_join$futime[train_join$death==TRUE])))
-  print(ordered_event_times)
   num_event_times <- nrow(ordered_event_times)
 
   train_arr <- apply(expand.grid(1:nrow(ordered_event_times), 1:length(train)), MARGIN = 1,  function(x) {data_at_time(x[[2]], x[[1]], train, ordered_event_times)})
@@ -136,6 +136,7 @@ train_time_svhm <-function(train, test, covariates, cost, opt='osqp', gamma_squa
 
 
   return(list('e_vec' = event_mat,
+              'event_times' = ordered_event_times,
               'sol' = gamma_sol,
               'train' = train_arr,
               'test' = test_arr

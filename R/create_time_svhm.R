@@ -69,7 +69,7 @@ create_time_svhm <- function(df, covariates, cost, varName_cencored, varName_fut
 
   df<-split(df, df$id)
 
-  df[sample(1:length(df))]
+  df <- df[sample(1:length(df))]
 
   partition <- SVHM:::createListPartition(df, 1, test_size=test_size)
 
