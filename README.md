@@ -90,6 +90,8 @@ time_model <- create_time_svhm(csl,
                                 gamma_squared=gamma_squared)
 
 ```
+# Notes and Remarks
+Optimization is done either via the Rmosek package or the osqp package in R. And while the osqp package is open to use for everybody the Rmosek package requires a license which can be aquired for example via an academic institution.
 
 ## References
 <a id="1">[1]</a> 
