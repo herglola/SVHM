@@ -62,7 +62,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
   names(df)[names(df) == varName_cencored] <- "death"
 
   names(df)[names(df) == varName_futime] <- "futime"
-
+  print(df)
   df <- transform(df,
                   death = as.logical(death),
                   id = 1:nrow(df))
