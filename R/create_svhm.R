@@ -95,6 +95,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
   for (j in 1:length(cost_grid)) {
     cost <- cost_grid[[j]]
     mean_pearson_corr <- 0
+    cat("Current cost paramter for which training is performed:", cost, "\n")
     for (i in 1:cross_validation_val) {
       training_set <- training_sets[[i]]
       validation_set <- validation_sets[[i]]

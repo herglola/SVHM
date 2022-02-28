@@ -11,6 +11,8 @@ library(dplyr)
 #' @param cost cost parameter to be used
 #' @param varName_cencored name of variable in df that indicates cencoring
 #' @param varName_futime name of variable in df that indicates event time
+#' @param start_interval name of variable that indicates when the interval starts
+#' @param end_interval name of variable that indicates when the interval ends
 #' @param test_size size of final test set in precent
 #' @param opt which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})
 #' @param gamma_squared width of gaussian kernel
