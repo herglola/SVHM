@@ -124,7 +124,7 @@ train_time_svhm <-function(train, test, covariates, cost, opt='osqp', gamma_squa
 
     test_ind_at_risk <- which(test_arr[,'Y',j] == 1)
     if(length(test_ind_at_risk) != 0){
-      test_risk_and_f <- unlist(apply(m_test_covariates, MARGIN = 1, function(x){risk_time_score(gamma_sol_j, event_vec, weight_vec, x, m_covariates, n, gamma_squared=gamma_squared, d=d)}), recursive = TRUE)
+      test_risk_and_f <- unlist(apply(m_test_covariates, MARGIN = 1, function(x){risk_time_score(gamma_sol_j, event_vec, weight_vec, x, m_covariates, n, gamma_squared=gamma_squared)}), recursive = TRUE)
       test_f_at_j <- test_risk_and_f[c(TRUE,FALSE)]
       test_risk_at_j <- test_risk_and_f[c(FALSE,TRUE)]
       test_arr[test_ind_at_risk, 'risk_at_j', j] <- test_risk_at_j
