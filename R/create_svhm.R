@@ -153,7 +153,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
     'Total time was ', time_cross_val + time_train, '\n',
     'optimal costparamter is', best_cost, '\n',
     'The pearson correlation is', trained_model$p_corr, '\n',
-    'The C-Index is', trained_model$C_index ,'\n'
+    'The C-Index is', trained_model$C_index$concordance ,'\n'
     )
 
   return(trained_model)
