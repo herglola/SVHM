@@ -53,7 +53,7 @@ opt_sol_mosek <- function(optimizazion_data, num_event_times, cost) {
   prob$qobj$v <- -adap_kernel_mat_as_triplet$x
   prob
 
-  capture.output(res_mosek <- mosek(prob))
+  invisible(capture.output(res_mosek <- mosek(prob)))
 
   # Return the solution
   stopifnot(identical(res_mosek$response$code, 0))
@@ -104,7 +104,7 @@ opt_time_sol_mosek <- function(e_vec, k_mat, w_vec, cost) {
   prob$qobj$j <- k_mat_as_triplet$j
   prob$qobj$v <- -k_mat_as_triplet$x
 
-  capture.output(res_mosek <- mosek(prob))
+  invisible(capture.output(res_mosek <- mosek(prob)))
 
   # Return the solution
   stopifnot(identical(res_mosek$response$code, 0))

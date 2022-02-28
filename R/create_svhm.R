@@ -16,6 +16,7 @@ library(dplyr)
 #' @param test_size size of final test set in precent
 #' @param opt which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})
 #' @param gamma_squared width of gaussian kernel
+#' @param choose optional parameter which decides if the C-index or the pearson correlation is used to determine the optimal cost parameter. Values are either \code{'c'} for the C-Index or \code{'p'} for the pearson correlation
 #'
 #' @return {trained model with
 #'          \code{$e_vec} vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
@@ -56,7 +57,7 @@ library(dplyr)
 #' }
 #'
 #' @export
-create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp', gamma_squared=.5){
+create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp', gamma_squared=.5, choose='c'){
 
   names(df)[names(df) == varName_cencored] <- "death"
 
@@ -92,21 +93,32 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
   }
 
   mean_person_of_grid <-  list()
+  mean_C_of_grid <- list()
   for (j in 1:length(cost_grid)) {
     cost <- cost_grid[[j]]
     mean_pearson_corr <- 0
+    mean_C_index <- 0
     cat("Current cost paramter for which training is performed:", cost, "\n")
     for (i in 1:cross_validation_val) {
       training_set <- training_sets[[i]]
       validation_set <- validation_sets[[i]]
       model <- train_svhm(training_set, validation_set, covariates, cost, k=k, opt=opt, gamma_squared=gamma_squared)
       mean_pearson_corr <- mean_pearson_corr + model$p_corr
+      mean_C_index <- mean_C_index + model$C_index
     }
 
     mean_person_of_grid[j] <- mean_pearson_corr/cross_validation_val
+    mean_C_of_grid[j] <- mean_C_index/cross_validation_val
   }
 
-  best_cost_ind <- which.max(mean_person_of_grid)
+  if (choose == 'p'){
+    best_cost_ind <- which.max(mean_person_of_grid)
+  } else if (choose == 'c'){
+    best_cost_ind <- which.max(mean_C_of_grid)
+  } else {
+    stop('Wrong choice of choose parameter!')
+  }
+
   best_cost <- cost_grid[best_cost_ind]
 
 
@@ -139,7 +151,8 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
     'Time of the training was ', time_train, '\n',
     'Total time was ', time_cross_val + time_train, '\n',
     'optimal costparamter is', best_cost, '\n',
-    'The pearson correlation is', trained_model$p_corr, '\n'
+    'The pearson correlation is', trained_model$p_corr, '\n',
+    'The C-Index is', trained_model$C_index ,'\n'
     )
 
   return(trained_model)

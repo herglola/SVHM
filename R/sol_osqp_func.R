@@ -27,7 +27,7 @@ opt_sol_osqp <- function(optimizazion_data, num_event_times, cost) {
 
 
   # Formulierung des Optimierungsproblems
-  capture.output(model <- osqp(P=adap_kernel_mat, q=-risk_vec, A=cond_mat, l=lower_bound, u=upper_bound, pars=osqpSettings()))
+  invisible(capture.output(model <- osqp(P=adap_kernel_mat, q=-risk_vec, A=cond_mat, l=lower_bound, u=upper_bound, pars=osqpSettings())))
   res_osqp <- model$Solve()
   return(-res_osqp$x)
 }
@@ -55,7 +55,7 @@ opt_time_sol_osqp <- function(e_vec, k_mat, w_vec, cost) {
 
 
   # Formulierung des Optimierungsproblems
-  capture.output(model <- osqp(P=k_mat, q=-rep(1, length(e_vec)), A=Matrix(diag(length(e_vec)), sparse = TRUE), l=lower_bound, u=upper_bound, pars=osqpSettings()))
+  invisible(capture.output(model <- osqp(P=k_mat, q=-rep(1, length(e_vec)), A=Matrix(diag(length(e_vec)), sparse = TRUE), l=lower_bound, u=upper_bound, pars=osqpSettings())))
   res_osqp <- model$Solve()
   return(-res_osqp$x)
 }

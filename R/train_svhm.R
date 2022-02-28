@@ -1,6 +1,7 @@
 
 library(Rmosek)
 library(osqp)
+library(survival)
 
 #' Train SVHM
 #'
@@ -21,12 +22,14 @@ library(osqp)
 #'          \code{$sol} calculated optimal solution,
 #'          \code{$t_predict} test dataset with risk scores \code{risk} and \code{t_predict},
 #'          \code{$p_corr} pearson correlation of the predicted times
+#'          \code{$C_indes} C-
 #' }
 #'
 #' @note The mosek package requires a license
 #'
 #' @import Rmosek
 #' @import osqp
+#' @import survival
 #'
 #' @examples {
 #'
@@ -124,10 +127,13 @@ train_svhm <-function(train, test, covariates, cost, k=3, opt='osqp', gamma_squa
     pearson_corr <- up/(downx*downy)
   }
 
+  C_statistic <- survival::concordancefit(test$futime, test$risk, timewt="n")
+
   return(list('e_vec' = event_vec,
               'k_mat' = kernel_mat,
               'sol' = gamma_sol,
               't_predict' = test,
-              'p_corr' = pearson_corr
+              'p_corr' = pearson_corr,
+              'C_index' = C_statistic
               ))
 }
