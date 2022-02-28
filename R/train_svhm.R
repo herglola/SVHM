@@ -105,8 +105,7 @@ train_svhm <-function(train, test, covariates, cost, k=3, opt='osqp', gamma_squa
                                                 as.numeric(test[x, covariates]),
                                                 train_covariates,
                                                 num_event_times,
-                                                gamma_squared=gamma_squared,
-                                                d=d)
+                                                gamma_squared=gamma_squared)
                                                 })
   )
 

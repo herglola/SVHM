@@ -104,7 +104,8 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName
       validation_set <- validation_sets[[i]]
       model <- train_svhm(training_set, validation_set, covariates, cost, k=k, opt=opt, gamma_squared=gamma_squared)
       mean_pearson_corr <- mean_pearson_corr + model$p_corr
-      mean_C_index <- mean_C_index + model$C_index
+
+      mean_C_index <- mean_C_index + model$C_index$concordance
     }
 
     mean_person_of_grid[j] <- mean_pearson_corr/cross_validation_val
