@@ -18,3 +18,11 @@ matrix storing all weights for every individual
 calculates the weights for every individual in the training dataset at every event time. If an individual experiences an event the weight is given by the ratio of at risk subjects with no event to all at risk subjects.
 If no event is experienced the weight is given by the ratio of one over all at risk subjects.
 }
+\examples{
+{
+training <- data.frame(id =c(1:5), futime= sort(runif(5)), death = c(TRUE, FALSE, FALSE, TRUE, TRUE), Y=c(5,4,3,2,1)),
+times <- subset(training[training$death==TRUE,], select=sort(futime))
+SVHM:::weight_mat(training, times)
+}
+
+}

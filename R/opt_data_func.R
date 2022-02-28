@@ -1,6 +1,4 @@
 library(Matrix)
-library(matchingR)
-
 #' Optimization Data
 #'
 #' calculates all needed values to execute quadratic optimization in SVHM
@@ -9,7 +7,9 @@ library(matchingR)
 #' @param covariates dataset of covariates of the subjects in a dataset
 #' @param training_dataset data frame representing the trainings dataset
 #' @param ordered_event_times data frame of all event times ordered in ascending order
-#' @param gamma_squared width of the kernel
+#' @param type Type of kernel, either 'gauss' or 'poly' for gaussian or polynomial kernel
+#' @param gamma_squared width of gaussian kernel
+#' @param d degree of polynomial kernel
 #'
 #' @return {List
 #' \code{$r_vec}            vector representing at which event times the subjects are under risk
@@ -22,11 +22,10 @@ library(matchingR)
 #'
 #'
 #' @import Matrix
-#' @import matchingR
 #'
 #'
 
-optimization_data <- function(covariates, training_dataset, ordered_event_times, gamma_squared) {
+optimization_data <- function(covariates, training_dataset, ordered_event_times, gamma_squared=.5, d=1) {
 
   kernel_matrix <- radial_kernel_mat(covariates=covariates, gamma_squared=gamma_squared)
 
@@ -40,24 +39,8 @@ optimization_data <- function(covariates, training_dataset, ordered_event_times,
                                           }
                         )
 
-  #rows_in_list <- lapply(rows_in_list, as, "sparseMatrix")
   adapted_kernel_matrix <- Matrix(do.call(cbind, rows_in_list),sparse = TRUE)
-  #adapted_kernel_matrix<- Matrix(matchingR:::repcol(adapted_kernel_matrix,nrow(ordered_event_times)), sparse=TRUE)
   adapted_kernel_matrix <- t(t(adapted_kernel_matrix)*event_vector)
-
-  'quad_matrix <-Matrix(0, length(event_vector), length(event_vector), sparse=TRUE)
-  n <- nrow(ordered_event_times)
-  for (i in 1:nrow(kernel_matrix)) {
-    quad_matrix[,((i-1)*n+1):(i*n)] <- as(t(event_matrix*kernel_matrix[,i]), "sparseVector")
-  }
-  adapted_kernel_matrix <-  t(t(quad_matrix)*event_vector)'
-
-  'adapted_kernel_matrix<-matchingR:::repcol(kernel_matrix,nrow(ordered_event_times))
-  adapted_kernel_matrix<-matchingR:::reprow(adapted_kernel_matrix,nrow(ordered_event_times))
-
-  Matrix(adapted_kernel_matrix, sparse = TRUE)
-  adapted_kernel_matrix <- Matrix(t(t(event_vector*adapted_kernel_matrix)*event_vector), sparse = TRUE)'
-
 
   cond_mat <- condition_mat(event_vector, nrow(ordered_event_times))
   weight_vec <- as.vector(t(weight_mat(training_dataset, ordered_event_times)))
@@ -69,3 +52,45 @@ optimization_data <- function(covariates, training_dataset, ordered_event_times,
               'k_mat'=kernel_matrix,
               'e_vec'=event_vector))
 }
+
+
+#' Time Dependent Optimization Data
+#'
+#' calculates all needed values to execute quadratic optimization for the time dependent SVHM at the given event time.
+#'
+#'
+#' @param covariates dataset of covariates of the subjects in a dataset
+#' @param mat_train matrix of all individuals under risk at the event time
+#' @param event_time event time for which data is calculated
+#' @param gamma_squared width of gaussian kernel
+#'
+#' @return {List
+#' \code{$adap_k_mat}  matrix on which quadratic optimization will be performed
+#' \code{$w_vec}       vector of weights at any event time for all subjects
+#' \code{$k_mat}       Gram matrix of covariates
+#' \code{$e_vec}       vector indicating vector containing information if a subject experiences an event.
+#' }
+#'
+#'
+#' @import Matrix
+#'
+#'
+
+optimization_time_data <- function(covariates, mat_train, event_time, gamma_squared=.5) {
+
+  event_vector <- rep(-1, nrow(mat_train))
+  event_vector[which(mat_train[, 'futime'] == event_time)] <- 1
+
+  kernel_matrix <- radial_kernel_mat(covariates=covariates, gamma_squared=gamma_squared)
+
+  adapted_kernel_matrix <- t(t(event_vector*kernel_matrix)*event_vector)
+
+  weight_vec <- rep(1/nrow(mat_train), nrow(mat_train))
+  weight_vec[which(mat_train[, 'futime'] == event_time)] <- 1-1/nrow(mat_train)
+
+  return(list('adap_k_mat'=adapted_kernel_matrix,
+              'w_vec'=weight_vec,
+              'k_mat'=kernel_matrix,
+              'e_vec'=event_vector))
+}
+

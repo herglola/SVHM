@@ -23,7 +23,7 @@ calculates the Gaussian Kernel value of two inputs
 {
 x <- runif(n=10)
 y <- runif(n=10)
-radial_kernel(x,y,.5)
+SVHM:::radial_kernel(x,y,.5)
 }
 
 }

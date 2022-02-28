@@ -34,7 +34,7 @@ ordered_event_times <- with(train,
                               training_id = train$training_id[train$death == TRUE])
 )
 
-create_risk_and_evemt_matrix(train, ordered_event_times)
+SVHM:::create_risk_and_evemt_matrix(train, ordered_event_times)
 }
 
 }

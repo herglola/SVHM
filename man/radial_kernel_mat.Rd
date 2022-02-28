@@ -21,7 +21,7 @@ calculates the gaussian kernel value of the covariates with each other. calculat
 {
 # Example with the preloaded mtcars dataset
 covariates <- subset( mtcars, select = c('drat', 'wt') )
-radial_kernel_mat(covariates,.5)
+SVHM:::radial_kernel_mat(covariates,.5)
 }
 
 }

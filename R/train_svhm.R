@@ -4,15 +4,16 @@ library(osqp)
 
 #' Train SVHM
 #'
-#' Uses the Rmosek or osqp package to train the SVHM on a given training and test set.
+#' Uses the Rmosek or osqp package to train the SVHM on a given training and test set. Names of the cencoring variable and event variable mus be \code{death} and \code{futime}
 #'
 #'
 #' @param train training dataset
 #' @param test test dataset
+#' @param covariates vector of name of covariates
 #' @param cost cost parameter of the support vector machine of type numeric
-#' @param gamma_squared width of the kernel
 #' @param k integer of how many nearest event times are used to predict the event time (default is 3)
 #' @param opt which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})
+#' @param gamma_squared width of gaussian kernel
 #'
 #' @return {trained model with
 #'          \code{$e_vec} vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
@@ -22,6 +23,7 @@ library(osqp)
 #'          \code{$p_corr} pearson correlation of the predicted times
 #' }
 #'
+#' @note The mosek package requires a license
 #'
 #' @import Rmosek
 #' @import osqp
@@ -34,13 +36,13 @@ library(osqp)
 #' data(bmt)
 #' df<-bmt[1:40,]
 #'
-#' # shuffles data
+#' # shuffle data
 #' rows <- sample(nrow(df))
 #' df <- df[rows, ]
 #'
 #' covariates <- c('z3', 'z4')
 #'
-#' # censoring variable and event variable need to have name "death" and "futime"
+#' # censoring variable and event variable need to have names "death" and "futime"
 #' names(df)[names(df) == "d3"] <- "death"
 #' names(df)[names(df) == "t2"] <- "futime"
 #'
@@ -51,7 +53,7 @@ library(osqp)
 #' train_svhm(train, test, covariates, 10, .5, k=1, opt='osqp')
 #' }
 #' @export
-train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='osqp'){
+train_svhm <-function(train, test, covariates, cost, k=3, opt='osqp', gamma_squared=.5){
   train <- transform(train, training_id = 1:nrow(train))
 
   #sortiert Datensatz nach ?berlebenszeit
@@ -74,7 +76,8 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
   #############################
 
   # Erstellt Daten f?r Optimierungsproblem der Form max(gamma^t*risk_vec -1/2* gamma^t*kernel_mat*gamma) mit Nebenbedingungen lower_bound \leq cond_mat*gamma \leq upper_bound
-  opt_data <- SVHM:::optimization_data(train_covariates, train, ordered_event_times, gamma_squared)
+  opt_data <- SVHM:::optimization_data(train_covariates, train, ordered_event_times, gamma_squared=gamma_squared)
+
   kernel_mat <- opt_data$k_mat
   event_vec <- opt_data$e_vec
 
@@ -86,7 +89,7 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
     stop("Invalid optimization method!")
   }
 
-  ######################
+    ######################
   # Berechne Riskwerte #
   ######################
   risk_scores_training <-  SVHM:::risk_score_training(gamma_sol, kernel_mat, event_vec, num_event_times, trainig_set_size)
@@ -99,7 +102,8 @@ train_svhm <-function(train, test, covariates, cost, gamma_squared, k=3, opt='os
                                                 as.numeric(test[x, covariates]),
                                                 train_covariates,
                                                 num_event_times,
-                                                gamma_squared)
+                                                gamma_squared=gamma_squared,
+                                                d=d)
                                                 })
   )
 

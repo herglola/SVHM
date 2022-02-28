@@ -9,12 +9,12 @@ create_svhm(
   covariates,
   cross_validation_val,
   cost_grid,
-  gamma_squared,
   varName_cencored,
   varName_futime,
   k = 3,
   test_size = 0.2,
-  opt = "osqp"
+  opt = "osqp",
+  gamma_squared = 0.5
 )
 }
 \arguments{
@@ -24,9 +24,7 @@ create_svhm(
 
 \item{cross_validation_val}{number of subset to use for cost optimization}
 
-\item{cost_grid}{grid of all cost parameter to be optoimzed upon}
-
-\item{gamma_squared}{width of the kernel}
+\item{cost_grid}{grid of all cost parameter to be optoimzed uponl}
 
 \item{varName_cencored}{name of variable in df that indicates cencoring}
 
@@ -37,6 +35,8 @@ create_svhm(
 \item{test_size}{size of final test set in precent}
 
 \item{opt}{which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})}
+
+\item{gamma_squared}{width of gaussian kernel}
 }
 \value{
 {trained model with
@@ -51,6 +51,9 @@ create_svhm(
 predicts the event times of a given dataset using cross validation for the cost parameter. Final model includes predicted event times as well as parameters to predict new event times from subject who are not in df.
 All values of covariates are first normalized to the intervall [0,1] before the SVHM algorithm is applied. The cost parameter for the final model is chosen with the best pearson correlation.
 }
+\note{
+The mosek package requires a license
+}
 \examples{
 {
 
@@ -61,13 +64,13 @@ library(SVHM)
 # Parameters #
 ##############
 
-gamma_squared <- 1
+gamma_squared <- 100
 k <- 1
 cross_validation_val <- 3
 test_size=.3
-cost_grid <- 2^c(-12,12)
+cost_grid <- 2^c(-6:6)
 
-covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7')
+covariates <- c('z7')
 
 ######################
 #  Model prediction  #
@@ -75,7 +78,7 @@ covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7')
 
 data(bmt)
 
-model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp')
+model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp', gamma_squared=gamma_squared)
 }
 
 }

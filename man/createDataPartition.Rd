@@ -4,27 +4,27 @@
 \alias{createDataPartition}
 \title{createDataPartition}
 \usage{
-createDataPartition(df, corss_validation_val, test_size = 0.2)
+createDataPartition(df, cross_validation_val, test_size = 0.2)
 }
 \arguments{
 \item{df}{data frame}
 
-\item{test_size}{size of test set (default=.8)}
-
 \item{cross_validation_val}{number of sets for k-fold cross validation}
+
+\item{test_size}{size of test set (default=.8)}
 }
 \value{
 {partitioned dataset
 }
 }
 \description{
-partitions a dataset into a train set and cross validation sets. createDataPartition() is not randomized, therefore df should be randomized before creating the partition!
+partitions a dataset into a test set and cross validation sets. createDataPartition() is not randomized, therefore df should be randomized before creating the partition!
 }
 \examples{
 {
 # Example with the preloaded mtcars dataset
 df<-mtcars
-partition <- createDataPartition(mtcars, 4, .2)
+partition <- SVHM:::createDataPartition(mtcars, 4, .2)
 }
 
 }

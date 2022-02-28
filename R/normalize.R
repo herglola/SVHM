@@ -10,7 +10,7 @@
 #'
 #' @examples {
 #' Example with the preloaded mtcars dataset
-#' normalize(mtcars, c('disp',  'hp'))
+#' SVHM:::normalize(mtcars, c('disp',  'hp'))
 #' }
 #'
 normalize <- function(df, covariates){

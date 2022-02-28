@@ -8,7 +8,8 @@ optimization_data(
   covariates,
   training_dataset,
   ordered_event_times,
-  gamma_squared
+  gamma_squared = 0.5,
+  d = 1
 )
 }
 \arguments{
@@ -18,7 +19,11 @@ optimization_data(
 
 \item{ordered_event_times}{data frame of all event times ordered in ascending order}
 
-\item{gamma_squared}{width of the kernel}
+\item{gamma_squared}{width of gaussian kernel}
+
+\item{d}{degree of polynomial kernel}
+
+\item{type}{Type of kernel, either 'gauss' or 'poly' for gaussian or polynomial kernel}
 }
 \value{
 {List

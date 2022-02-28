@@ -9,6 +9,11 @@
 #'
 #' @return matrix storing all weights for every individual
 #'
+#' @examples {
+#' training <- data.frame(id =c(1:5), futime= sort(runif(5)), death = c(TRUE, FALSE, FALSE, TRUE, TRUE), Y=c(5,4,3,2,1)),
+#' times <- subset(training[training$death==TRUE,], select=sort(futime))
+#' SVHM:::weight_mat(training, times)
+#' }
 #'
 
 weight_mat <- function(training_dataset, ordered_event_times) {

@@ -4,20 +4,30 @@
 \alias{train_svhm}
 \title{Train SVHM}
 \usage{
-train_svhm(train, test, covariates, cost, gamma_squared, k = 3, opt = "osqp")
+train_svhm(
+  train,
+  test,
+  covariates,
+  cost,
+  k = 3,
+  opt = "osqp",
+  gamma_squared = 0.5
+)
 }
 \arguments{
 \item{train}{training dataset}
 
 \item{test}{test dataset}
 
-\item{cost}{cost parameter of the support vector machine of type numeric}
+\item{covariates}{vector of name of covariates}
 
-\item{gamma_squared}{width of the kernel}
+\item{cost}{cost parameter of the support vector machine of type numeric}
 
 \item{k}{integer of how many nearest event times are used to predict the event time (default is 3)}
 
 \item{opt}{which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})}
+
+\item{gamma_squared}{width of gaussian kernel}
 }
 \value{
 {trained model with
@@ -29,7 +39,10 @@ train_svhm(train, test, covariates, cost, gamma_squared, k = 3, opt = "osqp")
 }
 }
 \description{
-Uses the Rmosek or osqp package to train the SVHM on a given training and test set.
+Uses the Rmosek or osqp package to train the SVHM on a given training and test set. Names of the cencoring variable and event variable mus be \code{death} and \code{futime}
+}
+\note{
+The mosek package requires a license
 }
 \examples{
 {
@@ -40,13 +53,13 @@ library(SVHM)
 data(bmt)
 df<-bmt[1:40,]
 
-# shuffles data
+# shuffle data
 rows <- sample(nrow(df))
 df <- df[rows, ]
 
 covariates <- c('z3', 'z4')
 
-# censoring variable and event variable need to have name "death" and "futime"
+# censoring variable and event variable need to have names "death" and "futime"
 names(df)[names(df) == "d3"] <- "death"
 names(df)[names(df) == "t2"] <- "futime"
 

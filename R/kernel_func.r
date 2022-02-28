@@ -13,7 +13,7 @@ library(distances)
 #' @examples {
 #' x <- runif(n=10)
 #' y <- runif(n=10)
-#' radial_kernel(x,y,.5)
+#' SVHM:::radial_kernel(x,y,.5)
 #' }
 #'
 radial_kernel <- function(x, y, gamma_squared) {
@@ -34,7 +34,7 @@ radial_kernel <- function(x, y, gamma_squared) {
 #' @examples {
 #' # Example with the preloaded mtcars dataset
 #' covariates <- subset( mtcars, select = c('drat', 'wt') )
-#' radial_kernel_mat(covariates,.5)
+#' SVHM:::radial_kernel_mat(covariates,.5)
 #' }
 #'
 radial_kernel_mat <- function(covariates, gamma_squared) {

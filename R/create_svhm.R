@@ -9,13 +9,13 @@ library(dplyr)
 #' @param df data frame
 #' @param covariates vector of name of covariates
 #' @param cross_validation_val number of subset to use for cost optimization
-#' @param cost_grid grid of all cost parameter to be optoimzed upon
-#' @param gamma_squared width of the kernel
+#' @param cost_grid grid of all cost parameter to be optoimzed uponl
 #' @param varName_cencored name of variable in df that indicates cencoring
 #' @param varName_futime name of variable in df that indicates event time
 #' @param k integer of how many nearest event times are used to predict the event time (default is 3)
 #' @param test_size size of final test set in precent
 #' @param opt which quadratic optimization is used (\code{opt='mosek'} or \code{opt='osqp'})
+#' @param gamma_squared width of gaussian kernel
 #'
 #' @return {trained model with
 #'          \code{$e_vec} vector indicating vector containing information if a subject is at risk or if an event happens. If n are the number of subjects and m the number of event times, then event_vec has length n*m,
@@ -25,6 +25,7 @@ library(dplyr)
 #'          \code{$p_corr} pearson correlation of the predicted times
 #' }
 #'
+#' @note The mosek package requires a license
 #'
 #' @import dplyr
 #'
@@ -37,13 +38,13 @@ library(dplyr)
 #' # Parameters #
 #' ##############
 #'
-#' gamma_squared <- 1
+#' gamma_squared <- 100
 #' k <- 1
 #' cross_validation_val <- 3
 #' test_size=.3
-#' cost_grid <- 2^c(-12,12)
+#' cost_grid <- 2^c(-6:6)
 #'
-#' covariates <- c('z1', 'z2', 'z3', 'z4', 'z5', 'z6', 'z7')
+#' covariates <- c('z7')
 #'
 #' ######################
 #' #  Model prediction  #
@@ -51,11 +52,11 @@ library(dplyr)
 #'
 #' data(bmt)
 #'
-#' model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp')
+#' model <- create_svhm(bmt, covariates, cross_validation_val, cost_grid, varName_cencored="d3", varName_futime = "t2", k=k, test_size=test_size, opt='osqp', gamma_squared=gamma_squared)
 #' }
 #'
 #' @export
-create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_squared, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp'){
+create_svhm <- function(df, covariates, cross_validation_val, cost_grid, varName_cencored, varName_futime, k=3, test_size=.2, opt='osqp', gamma_squared=.5){
 
   names(df)[names(df) == varName_cencored] <- "death"
 
@@ -97,8 +98,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_s
     for (i in 1:cross_validation_val) {
       training_set <- training_sets[[i]]
       validation_set <- validation_sets[[i]]
-
-      model <- train_svhm(training_set, validation_set, covariates, cost, gamma_squared, k=k, opt=opt)
+      model <- train_svhm(training_set, validation_set, covariates, cost, k=k, opt=opt, gamma_squared=gamma_squared)
       mean_pearson_corr <- mean_pearson_corr + model$p_corr
     }
 
@@ -123,7 +123,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_s
 
   df_train <- bind_rows(cross_validation_sets)
 
-  trained_model <- train_svhm(df_train, df_test, covariates, best_cost, gamma_squared, k, opt)
+  trained_model <- train_svhm(df_train, df_test, covariates, best_cost, k, opt, gamma_squared=gamma_squared)
   trained_model['cost'] <- best_cost
 
 
@@ -134,7 +134,7 @@ create_svhm <- function(df, covariates, cross_validation_val, cost_grid, gamma_s
     #######################################\n
     #            model results            #\n
     #######################################\n',
-    'Time to find cost paramet er was ', time_cross_val, '\n',
+    'Time to find cost parameter was ', time_cross_val, '\n',
     'Time of the training was ', time_train, '\n',
     'Total time was ', time_cross_val + time_train, '\n',
     'optimal costparamter is', best_cost, '\n',

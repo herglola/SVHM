@@ -10,7 +10,8 @@ risk_score(
   v,
   covariates_train,
   num_event_times,
-  gamma_squared
+  gamma_squared = 0.5,
+  d = 1
 )
 }
 \arguments{
@@ -25,7 +26,11 @@ If n are the number of subjects in the training dataset and m the number of even
 
 \item{num_event_times}{number of event times that occour in the training data set}
 
-\item{gamma_squared}{width of the kernel}
+\item{gamma_squared}{width of gaussian kernel}
+
+\item{d}{degree of polynomial kernel}
+
+\item{type}{Type of kernel, either 'gauss' or 'poly' for gaussian or polynomial kernel}
 }
 \value{
 risk score of the individual
